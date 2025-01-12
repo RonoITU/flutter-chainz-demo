@@ -1,5 +1,5 @@
-name: words_app
-description: "A new Flutter project."
+name: sep_chain_demo
+description: "A simple demo of hashing for separate chaining."
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 

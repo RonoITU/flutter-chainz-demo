@@ -1,4 +1,4 @@
-# words_app
+# sep_chain_demo
 
 A new Flutter project.
 
