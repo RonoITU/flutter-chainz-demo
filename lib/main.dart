@@ -17,22 +17,24 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const HashTableDemo(title: 'Separate Chaining Demo'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class HashTableDemo extends StatefulWidget {
+  const HashTableDemo({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HashTableDemo> createState() => _HashTableDemoState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  List<int> _numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+class _HashTableDemoState extends State<HashTableDemo> {
+  List<int> _numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  List<SearchChain> _chains =
+      List.generate(4, (int index) => SearchChain(name: '$index'));
 
   void _incrementCounter() {
     setState(() {
@@ -52,21 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 32.0,
-              children: <Widget>[
-                SearchChain(name: '0'),
-                SearchChain(name: '1'),
-                SearchChain(name: '2'),
-                SearchChain(name: '3'),
-              ],
-            ),
-            const Text(
-              'Symbol table with 2 chains.',
-            ),
-          ],
+          children: _chains,
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -79,29 +67,27 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class SearchChain extends StatefulWidget {
-  const SearchChain({super.key, required this.name});
-
   final String name;
+
+  const SearchChain({super.key, required this.name});
 
   @override
   State<StatefulWidget> createState() => _SearchChainState();
 }
 
 class _SearchChainState extends State<SearchChain> {
-  List<int> _numbers = [];
-
-  void addNumber(int n) {
-    setState(() {
-      _numbers.add(n);
-    });
-  }
+  List<int> _numbers = [10, 20, 30];
 
   @override
   Widget build(BuildContext context) {
-    var c = <Widget>[];
+    var contents = <Widget>[];
+
+    contents.add(Container(
+        margin: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+        child: Text('${widget.name} →')));
 
     for (final n in _numbers) {
-      c.add(Container(
+      contents.add(Container(
         alignment: Alignment.center,
         height: 24,
         width: 32,
@@ -111,8 +97,7 @@ class _SearchChainState extends State<SearchChain> {
       ));
     }
 
-    c.add(Text(widget.name));
-
-    return Column(children: c);
+    return Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center, children: contents);
   }
 }
