@@ -32,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<int> _numbers = [1,2,3,4,5,6,7,8,9];
+  List<int> _numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   void _incrementCounter() {
     setState(() {
@@ -55,49 +55,12 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 32.0,
               children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    Container(
-                      alignment: Alignment.center,
-                      height: 32,
-                      width: 32,
-                      margin: EdgeInsets.symmetric(vertical: 3.0, horizontal: 3.0),
-                      color: Colors.lightBlue,
-                      child: Text('1'),
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      height: 32,
-                      width: 32,
-                      margin: EdgeInsets.symmetric(vertical: 3.0, horizontal: 3.0),
-                      color: Colors.lightBlue,
-                      child: Text('2'),
-                    ),
-                    Text('0'),
-                  ],
-                ),
-                Column(
-                  children: <Widget>[
-                    Container(
-                      alignment: Alignment.center,
-                      height: 32,
-                      width: 32,
-                      margin: EdgeInsets.symmetric(vertical: 3.0, horizontal: 3.0),
-                      color: Colors.lightBlue,
-                      child: Text('3'),
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      height: 32,
-                      width: 32,
-                      margin: EdgeInsets.symmetric(vertical: 3.0, horizontal: 3.0),
-                      color: Colors.lightBlue,
-                      child: Text('4'),
-                    ),
-                    Text('1'),
-                  ],
-                ),
+                SearchChain(name: '0'),
+                SearchChain(name: '1'),
+                SearchChain(name: '2'),
+                SearchChain(name: '3'),
               ],
             ),
             const Text(
@@ -112,5 +75,44 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ),
     );
+  }
+}
+
+class SearchChain extends StatefulWidget {
+  const SearchChain({super.key, required this.name});
+
+  final String name;
+
+  @override
+  State<StatefulWidget> createState() => _SearchChainState();
+}
+
+class _SearchChainState extends State<SearchChain> {
+  List<int> _numbers = [];
+
+  void addNumber(int n) {
+    setState(() {
+      _numbers.add(n);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var c = <Widget>[];
+
+    for (final n in _numbers) {
+      c.add(Container(
+        alignment: Alignment.center,
+        height: 24,
+        width: 32,
+        margin: EdgeInsets.symmetric(vertical: 3.0, horizontal: 3.0),
+        color: Colors.lightBlue,
+        child: Text('$n'),
+      ));
+    }
+
+    c.add(Text(widget.name));
+
+    return Column(children: c);
   }
 }
