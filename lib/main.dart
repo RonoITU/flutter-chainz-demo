@@ -53,9 +53,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'The lottery numbers are:',
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -77,6 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Colors.lightBlue,
                       child: Text('2'),
                     ),
+                    Text('0'),
                   ],
                 ),
                 Column(
@@ -97,9 +95,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Colors.lightBlue,
                       child: Text('4'),
                     ),
+                    Text('1'),
                   ],
                 ),
               ],
+            ),
+            const Text(
+              'Symbol table with 2 chains.',
             ),
           ],
         ),
