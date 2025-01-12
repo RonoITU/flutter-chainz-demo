@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 void main() {
@@ -35,12 +33,23 @@ class _HashTableDemoState extends State<HashTableDemo> {
   List<int> _numbers = [];
   List<SearchChainModel> _chains =
       List.generate(4, (int index) => SearchChainModel());
+  int _x = 0, _multiplier = 1024;
 
   void _addNextInteger() {
     setState(() {
-      var x = Random().nextInt(1024);
-      _numbers.add(x);
-      _chains[x % _chains.length].addNumber(x);
+      _numbers.add(_x);
+      _chains[_x % _chains.length].addNumber(_x);
+      _x += _multiplier;
+    });
+  }
+
+  void _addNextChain() {
+    setState(() {
+      _chains =
+          List.generate(_chains.length + 1, (int index) => SearchChainModel());
+      for (final num in _numbers) {
+        _chains[num % _chains.length].addNumber(num);
+      }
     });
   }
 
@@ -60,8 +69,7 @@ class _HashTableDemoState extends State<HashTableDemo> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: ListView(
           children: _getChainBody(),
         ),
       ),
@@ -72,7 +80,7 @@ class _HashTableDemoState extends State<HashTableDemo> {
           child: const Icon(Icons.add),
         ),
         FloatingActionButton(
-          onPressed: _addNextInteger,
+          onPressed: _addNextChain,
           tooltip: 'Add chain',
           child: const Icon(Icons.link),
         ),
@@ -129,30 +137,3 @@ class SearchChain extends StatelessWidget {
             }));
   }
 }
-
-/*
-class _SearchChainState extends State<SearchChain> {
-  @override
-  Widget build(BuildContext context) {
-    var contents = <Widget>[];
-
-    contents.add(Container(
-        margin: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
-        child: Text('${widget.name} →')));
-
-    for (final n in _numbers) {
-      contents.add(Container(
-        alignment: Alignment.center,
-        height: 24,
-        width: 32,
-        margin: EdgeInsets.symmetric(vertical: 3.0, horizontal: 3.0),
-        color: Colors.lightBlue,
-        child: Text('$n'),
-      ));
-    }
-
-    return Wrap(
-        crossAxisAlignment: WrapCrossAlignment.center, children: contents);
-  }
-}
-*/
