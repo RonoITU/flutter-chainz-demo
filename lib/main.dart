@@ -32,16 +32,24 @@ class HashTableDemo extends StatefulWidget {
 }
 
 class _HashTableDemoState extends State<HashTableDemo> {
-  List<int> _numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-  List<SearchChain> _chains =
-      List.generate(4, (int index) => SearchChain(name: '$index'));
+  List<int> _numbers = [];
+  List<SearchChainModel> _chains =
+      List.generate(4, (int index) => SearchChainModel());
 
-  void _incrementCounter() {
+  void _addNextInteger() {
     setState(() {
-      for (var i = 0; i < _numbers.length; i++) {
-        _numbers[i] = Random().nextInt(90);
-      }
+      var x = Random().nextInt(1024);
+      _numbers.add(x);
+      _chains[x % _chains.length].addNumber(x);
     });
+  }
+
+  List<Widget> _getChainBody() {
+    List<SearchChain> body = [];
+    for (var i = 0; i < _chains.length; i++) {
+      body.add(SearchChain(name: '$i', model: _chains[i]));
+    }
+    return body;
   }
 
   @override
@@ -54,11 +62,11 @@ class _HashTableDemoState extends State<HashTableDemo> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: _chains,
+          children: _getChainBody(),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _addNextInteger,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
@@ -66,18 +74,56 @@ class _HashTableDemoState extends State<HashTableDemo> {
   }
 }
 
-class SearchChain extends StatefulWidget {
-  final String name;
+class SearchChainModel with ChangeNotifier {
+  List<int> _numbers = [];
+  List<int> get numbers => _numbers.toList();
 
-  const SearchChain({super.key, required this.name});
-
-  @override
-  State<StatefulWidget> createState() => _SearchChainState();
+  void addNumber(int x) {
+    _numbers.add(x);
+    notifyListeners();
+  }
 }
 
-class _SearchChainState extends State<SearchChain> {
-  List<int> _numbers = [10, 20, 30];
+class SearchChain extends StatelessWidget {
+  final String name;
+  final SearchChainModel model;
 
+  const SearchChain({super.key, required this.name, required this.model});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: ListenableBuilder(
+            listenable: model,
+            builder: (BuildContext context, Widget? child) {
+              var contents = <Widget>[];
+
+              contents.add(Container(
+                  margin: EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                  child: Text('$name →')));
+
+              final List<int> values = model.numbers;
+
+              for (final n in values) {
+                contents.add(Container(
+                  alignment: Alignment.center,
+                  height: 24,
+                  width: 32,
+                  margin: EdgeInsets.symmetric(vertical: 3.0, horizontal: 3.0),
+                  color: Colors.lightBlue,
+                  child: Text('$n'),
+                ));
+              }
+
+              return Wrap(
+                children: contents,
+              );
+            }));
+  }
+}
+
+/*
+class _SearchChainState extends State<SearchChain> {
   @override
   Widget build(BuildContext context) {
     var contents = <Widget>[];
@@ -101,3 +147,4 @@ class _SearchChainState extends State<SearchChain> {
         crossAxisAlignment: WrapCrossAlignment.center, children: contents);
   }
 }
+*/
