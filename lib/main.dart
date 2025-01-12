@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -30,23 +32,76 @@ class HashTableDemo extends StatefulWidget {
 }
 
 class _HashTableDemoState extends State<HashTableDemo> {
+  var _random = Random();
+  List<int> _primes = [53, 47, 43, 41, 37, 31, 29, 23, 19, 17, 13, 11, 7, 5];
   List<int> _numbers = [];
   List<SearchChainModel> _chains =
       List.generate(4, (int index) => SearchChainModel());
-  int _x = 0, _multiplier = 1024;
+  int _x = 0, _x4 = 0, _x1024 = 0;
 
-  void _addNextInteger() {
+  void _reset() {
     setState(() {
-      _numbers.add(_x);
-      _chains[_x % _chains.length].addNumber(_x);
-      _x += _multiplier;
+    _primes = [53, 47, 43, 41, 37, 31, 29, 23, 19, 17, 13, 11, 7, 5];
+    _numbers = [];
+    _chains =
+      List.generate(4, (int index) => SearchChainModel());
+      _x = 0; _x4 = 0; _x1024 = 0;
     });
   }
 
-  void _addNextChain() {
+  void _addNextInteger() {
+    _addToSymbolTable(_x);
+    _x++;
+  }
+
+  void _addNext4Integer() {
+    _addToSymbolTable(_x4);
+    _x4 += 4;
+  }
+
+  void _addNext1024Integer() {
+    _addToSymbolTable(_x1024);
+    _x1024 += 1024;
+  }
+
+  void _addNextRandomInteger() {
+    var number = _random.nextInt(99_999);
+    _addToSymbolTable(number);
+  }
+
+  void _addToSymbolTable(int x) {
+    setState(() {
+      _numbers.add(x);
+      _chains[x % _chains.length].addNumber(x);
+    });
+  }
+
+  void plusOneRebuild() {
     setState(() {
       _chains =
           List.generate(_chains.length + 1, (int index) => SearchChainModel());
+      for (final num in _numbers) {
+        _chains[num % _chains.length].addNumber(num);
+      }
+    });
+  }
+
+  void _doubleChainsRebuild() {
+    setState(() {
+      _chains =
+          List.generate(_chains.length * 2, (int index) => SearchChainModel());
+      for (final num in _numbers) {
+        _chains[num % _chains.length].addNumber(num);
+      }
+    });
+  }
+
+  void _primeRebuild() {
+    if (_primes.isEmpty) return;
+    var nextPrime = _primes.removeLast();
+    setState(() {
+      _chains =
+          List.generate(nextPrime, (int index) => SearchChainModel());
       for (final num in _numbers) {
         _chains[num % _chains.length].addNumber(num);
       }
@@ -73,16 +128,39 @@ class _HashTableDemoState extends State<HashTableDemo> {
           children: _getChainBody(),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _reset,
+        tooltip: 'Reset',
+        child: const Icon(Icons.restart_alt),
+      ),
       persistentFooterButtons: [
-        FloatingActionButton(
+        TextButton(
           onPressed: _addNextInteger,
-          tooltip: 'Add integer',
-          child: const Icon(Icons.add),
+          child: Text('Sequential'),
         ),
-        FloatingActionButton(
-          onPressed: _addNextChain,
-          tooltip: 'Add chain',
-          child: const Icon(Icons.link),
+        TextButton(
+          onPressed: _addNextRandomInteger,
+          child: Text('Random'),
+        ),
+        TextButton(
+          onPressed: _addNext4Integer,
+          child: Text('4\'s'),
+        ),
+        TextButton(
+          onPressed: _addNext1024Integer,
+          child: Text('1024\'s'),
+        ),
+        TextButton(
+          onPressed: plusOneRebuild,
+          child: Text('+1 Rebuild'),
+        ),
+        TextButton(
+          onPressed: _doubleChainsRebuild,
+          child: Text('Double Rebuild'),
+        ),
+        TextButton(
+          onPressed: _primeRebuild,
+          child: Text('Prime Rebuild'),
         ),
       ],
     );
@@ -124,7 +202,7 @@ class SearchChain extends StatelessWidget {
                 contents.add(Container(
                   alignment: Alignment.center,
                   height: 24,
-                  width: 32,
+                  width: 48,
                   margin: EdgeInsets.symmetric(vertical: 3.0, horizontal: 3.0),
                   color: Colors.lightBlue,
                   child: Text('$n'),
