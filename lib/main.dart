@@ -32,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<int> _numbers = [1,2,3,4,5,6,7];
+  List<int> _numbers = [1,2,3,4,5,6,7,8,9];
 
   void _incrementCounter() {
     setState(() {
@@ -40,14 +40,6 @@ class _MyHomePageState extends State<MyHomePage> {
         _numbers[i] = Random().nextInt(90);
       }
     });
-  }
-
-  String _printNumbers(List<int> list) {
-    var sb = StringBuffer();
-    for (final n in list) {
-      sb.write('$n\n');
-    }
-    return sb.toString();
   }
 
   @override
@@ -64,9 +56,50 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'The lottery numbers are:',
             ),
-            Text(
-              _printNumbers(_numbers),
-              style: Theme.of(context).textTheme.headlineMedium,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.center,
+                      height: 32,
+                      width: 32,
+                      margin: EdgeInsets.symmetric(vertical: 3.0, horizontal: 3.0),
+                      color: Colors.lightBlue,
+                      child: Text('1'),
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      height: 32,
+                      width: 32,
+                      margin: EdgeInsets.symmetric(vertical: 3.0, horizontal: 3.0),
+                      color: Colors.lightBlue,
+                      child: Text('2'),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.center,
+                      height: 32,
+                      width: 32,
+                      margin: EdgeInsets.symmetric(vertical: 3.0, horizontal: 3.0),
+                      color: Colors.lightBlue,
+                      child: Text('3'),
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      height: 32,
+                      width: 32,
+                      margin: EdgeInsets.symmetric(vertical: 3.0, horizontal: 3.0),
+                      color: Colors.lightBlue,
+                      child: Text('4'),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
