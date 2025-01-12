@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
         useMaterial3: true,
       ),
       home: const HashTableDemo(title: 'Separate Chaining Demo'),
@@ -204,7 +204,7 @@ class SearchChain extends StatelessWidget {
                   height: 24,
                   width: 48,
                   margin: EdgeInsets.symmetric(vertical: 3.0, horizontal: 3.0),
-                  color: Colors.lightBlue,
+                  color: const Color.fromARGB(255, 173, 229, 255),
                   child: Text('$n'),
                 ));
               }
