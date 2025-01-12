@@ -65,11 +65,18 @@ class _HashTableDemoState extends State<HashTableDemo> {
           children: _getChainBody(),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addNextInteger,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+      persistentFooterButtons: [
+        FloatingActionButton(
+          onPressed: _addNextInteger,
+          tooltip: 'Add integer',
+          child: const Icon(Icons.add),
+        ),
+        FloatingActionButton(
+          onPressed: _addNextInteger,
+          tooltip: 'Add chain',
+          child: const Icon(Icons.link),
+        ),
+      ],
     );
   }
 }
@@ -92,7 +99,8 @@ class SearchChain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Align(
+        alignment: Alignment.centerLeft,
         child: ListenableBuilder(
             listenable: model,
             builder: (BuildContext context, Widget? child) {
