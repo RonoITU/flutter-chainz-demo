@@ -1,6 +1,6 @@
 {
-    "name": "words_app",
-    "short_name": "words_app",
+    "name": "sep_chain_demo",
+    "short_name": "sep_chain_demo",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
