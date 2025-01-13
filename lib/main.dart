@@ -33,7 +33,10 @@ class HashTableDemo extends StatefulWidget {
 
 class _HashTableDemoState extends State<HashTableDemo> {
   final Random _random = Random();
-  final List<int> _primes = [11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101];
+  final List<int> _primes = [11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 
+                             47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 
+                             97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 
+                             149, 151, 157, 163, 167, 173];
 
   List<int> _numbers = [];
 
@@ -43,7 +46,7 @@ class _HashTableDemoState extends State<HashTableDemo> {
   int _x = 0, _x4 = 0, _x1024 = 0;
 
   bool _usingPrimes = false;
-  int _primeInUse = 29;
+  int _primeInUse = 13;
 
   void _reset() {
     setState(() {
@@ -51,7 +54,7 @@ class _HashTableDemoState extends State<HashTableDemo> {
       _chains =
         List.generate(4, (int index) => SearchChainModel());
       _x = 0; _x4 = 0; _x1024 = 0;
-      _primeInUse = 29;
+      _primeInUse = 13;
     });
   }
 
@@ -99,7 +102,7 @@ class _HashTableDemoState extends State<HashTableDemo> {
     setState(() {
       _chains =
           List.generate(_chains.length, (int index) => SearchChainModel());
-      _primeInUse = _primes.firstWhere((int prime) {return prime > _chains.length + 20;});
+      _primeInUse = _primes.firstWhere((int prime) {return prime > _chains.length * 3;}, orElse: () => _primes.last);
       for (final number in _numbers) {
         _addOnChains(number);
       }
@@ -110,7 +113,7 @@ class _HashTableDemoState extends State<HashTableDemo> {
     setState(() {
       _chains =
           List.generate(_chains.length + 1, (int index) => SearchChainModel());
-      _primeInUse = _primes.firstWhere((int prime) {return prime > _chains.length + 20;});
+      _primeInUse = _primes.firstWhere((int prime) {return prime > _chains.length * 3;}, orElse: () => _primes.last);
       for (final number in _numbers) {
         _addOnChains(number);
       }
@@ -121,7 +124,7 @@ class _HashTableDemoState extends State<HashTableDemo> {
     setState(() {
       _chains =
           List.generate(_chains.length * 2, (int index) => SearchChainModel());
-      _primeInUse = _primes.firstWhere((int prime) {return prime > _chains.length + 20;});
+      _primeInUse = _primes.firstWhere((int prime) {return prime > _chains.length * 3;}, orElse: () => _primes.last);
       for (final number in _numbers) {
         _addOnChains(number);
       }
