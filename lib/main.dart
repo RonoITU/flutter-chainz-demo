@@ -32,83 +32,103 @@ class HashTableDemo extends StatefulWidget {
 }
 
 class _HashTableDemoState extends State<HashTableDemo> {
-  var _random = Random();
-  List<int> _primes = [53, 47, 43, 41, 37, 31, 29, 23, 19, 17, 13, 11, 7, 5];
+  final Random _random = Random();
+  final List<int> _primes = [11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101];
+
   List<int> _numbers = [];
+
   List<SearchChainModel> _chains =
       List.generate(4, (int index) => SearchChainModel());
+
   int _x = 0, _x4 = 0, _x1024 = 0;
+
+  bool _usingPrimes = false;
+  int _primeInUse = 29;
 
   void _reset() {
     setState(() {
-    _primes = [53, 47, 43, 41, 37, 31, 29, 23, 19, 17, 13, 11, 7, 5];
-    _numbers = [];
-    _chains =
-      List.generate(4, (int index) => SearchChainModel());
+      _numbers = [];
+      _chains =
+        List.generate(4, (int index) => SearchChainModel());
       _x = 0; _x4 = 0; _x1024 = 0;
+      _primeInUse = 29;
     });
   }
 
   void _addNextInteger() {
-    _addToSymbolTable(_x);
-    _x++;
+    setState(() {
+      _numbers.add(_x);
+      _addOnChains(_x);
+      _x++;
+    });
   }
 
   void _addNext4Integer() {
-    _addToSymbolTable(_x4);
-    _x4 += 4;
+    setState(() {
+      _numbers.add(_x4);
+      _addOnChains(_x4);
+      _x4 += 4;
+    });
   }
 
   void _addNext1024Integer() {
-    _addToSymbolTable(_x1024);
-    _x1024 += 1024;
+    setState(() {
+      _numbers.add(_x1024);
+      _addOnChains(_x1024);
+      _x1024 += 1024;
+    });
   }
 
   void _addNextRandomInteger() {
     var number = _random.nextInt(99_999);
-    _addToSymbolTable(number);
-  }
-
-  void _addToSymbolTable(int x) {
     setState(() {
-      _numbers.add(x);
-      _chains[x % _chains.length].addNumber(x);
+      _numbers.add(number);
+      _addOnChains(number);
     });
   }
 
-  void plusOneRebuild() {
+  void _addOnChains(int x) {
+    if (_usingPrimes) {
+      _chains[(x % _primeInUse) % _chains.length].addNumber(x);
+    } else {
+      _chains[x % _chains.length].addNumber(x);
+    }
+  }
+
+  void _rebuild() {
+    setState(() {
+      _chains =
+          List.generate(_chains.length, (int index) => SearchChainModel());
+      _primeInUse = _primes.firstWhere((int prime) {return prime > _chains.length + 20;});
+      for (final number in _numbers) {
+        _addOnChains(number);
+      }
+    });
+  }
+
+  void _plusOneRebuild() {
     setState(() {
       _chains =
           List.generate(_chains.length + 1, (int index) => SearchChainModel());
-      for (final num in _numbers) {
-        _chains[num % _chains.length].addNumber(num);
+      _primeInUse = _primes.firstWhere((int prime) {return prime > _chains.length + 20;});
+      for (final number in _numbers) {
+        _addOnChains(number);
       }
     });
   }
 
-  void _doubleChainsRebuild() {
+  void _doubleRebuild() {
     setState(() {
       _chains =
           List.generate(_chains.length * 2, (int index) => SearchChainModel());
-      for (final num in _numbers) {
-        _chains[num % _chains.length].addNumber(num);
+      _primeInUse = _primes.firstWhere((int prime) {return prime > _chains.length + 20;});
+      for (final number in _numbers) {
+        _addOnChains(number);
       }
     });
   }
 
-  void _primeRebuild() {
-    if (_primes.isEmpty) return;
-    var nextPrime = _primes.removeLast();
-    setState(() {
-      _chains =
-          List.generate(nextPrime, (int index) => SearchChainModel());
-      for (final num in _numbers) {
-        _chains[num % _chains.length].addNumber(num);
-      }
-    });
-  }
-
-  List<Widget> _getChainBody() {
+  List<Widget> _getChainsWidget() {
     List<SearchChain> body = [];
     for (var i = 0; i < _chains.length; i++) {
       body.add(SearchChain(name: '$i', model: _chains[i]));
@@ -125,7 +145,7 @@ class _HashTableDemoState extends State<HashTableDemo> {
       ),
       body: Center(
         child: ListView(
-          children: _getChainBody(),
+          children: _getChainsWidget(),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -151,16 +171,22 @@ class _HashTableDemoState extends State<HashTableDemo> {
           child: Text('1024\'s'),
         ),
         TextButton(
-          onPressed: plusOneRebuild,
+          onPressed: _plusOneRebuild,
           child: Text('+1 Rebuild'),
         ),
         TextButton(
-          onPressed: _doubleChainsRebuild,
+          onPressed: _doubleRebuild,
           child: Text('Double Rebuild'),
         ),
-        TextButton(
-          onPressed: _primeRebuild,
-          child: Text('Prime Rebuild'),
+        Switch(
+          activeColor: Colors.red,
+          value: _usingPrimes,
+          onChanged: (bool value) {
+            setState(() {
+              _usingPrimes = value;
+            });
+            _rebuild();
+          },
         ),
       ],
     );
