@@ -36,7 +36,8 @@ class _HashTableDemoState extends State<HashTableDemo> {
   final List<int> _primes = [11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 
                              47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 
                              97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 
-                             149, 151, 157, 163, 167, 173];
+                             149, 151, 157, 163, 167, 173, 179, 181, 191, 193,
+                             197, 199, 211, 223, 227, 229, 233, 239, 241, 251];
 
   List<int> _numbers = [];
 
@@ -45,8 +46,8 @@ class _HashTableDemoState extends State<HashTableDemo> {
 
   int _x = 0, _x4 = 0, _x1024 = 0;
 
-  bool _usingPrimes = false;
-  int _primeInUse = 13;
+  bool _usingPrimeDistribution = false;
+  int _currentPrime = 13;
 
   void _reset() {
     setState(() {
@@ -54,7 +55,7 @@ class _HashTableDemoState extends State<HashTableDemo> {
       _chains =
         List.generate(4, (int index) => SearchChainModel());
       _x = 0; _x4 = 0; _x1024 = 0;
-      _primeInUse = 13;
+      _currentPrime = 13;
     });
   }
 
@@ -91,8 +92,8 @@ class _HashTableDemoState extends State<HashTableDemo> {
   }
 
   void _addOnChains(int x) {
-    if (_usingPrimes) {
-      _chains[(x % _primeInUse) % _chains.length].addNumber(x);
+    if (_usingPrimeDistribution) {
+      _chains[(x % _currentPrime) % _chains.length].addNumber(x);
     } else {
       _chains[x % _chains.length].addNumber(x);
     }
@@ -102,7 +103,7 @@ class _HashTableDemoState extends State<HashTableDemo> {
     setState(() {
       _chains =
           List.generate(_chains.length, (int index) => SearchChainModel());
-      _primeInUse = _primes.firstWhere((int prime) {return prime > _chains.length * 3;}, orElse: () => _primes.last);
+      _currentPrime = _primes.firstWhere((int prime) {return prime > _chains.length * 4;}, orElse: () => _primes.last);
       for (final number in _numbers) {
         _addOnChains(number);
       }
@@ -113,7 +114,7 @@ class _HashTableDemoState extends State<HashTableDemo> {
     setState(() {
       _chains =
           List.generate(_chains.length + 1, (int index) => SearchChainModel());
-      _primeInUse = _primes.firstWhere((int prime) {return prime > _chains.length * 3;}, orElse: () => _primes.last);
+      _currentPrime = _primes.firstWhere((int prime) {return prime > _chains.length * 4;}, orElse: () => _primes.last);
       for (final number in _numbers) {
         _addOnChains(number);
       }
@@ -124,7 +125,7 @@ class _HashTableDemoState extends State<HashTableDemo> {
     setState(() {
       _chains =
           List.generate(_chains.length * 2, (int index) => SearchChainModel());
-      _primeInUse = _primes.firstWhere((int prime) {return prime > _chains.length * 3;}, orElse: () => _primes.last);
+      _currentPrime = _primes.firstWhere((int prime) {return prime > _chains.length * 4;}, orElse: () => _primes.last);
       for (final number in _numbers) {
         _addOnChains(number);
       }
@@ -132,9 +133,15 @@ class _HashTableDemoState extends State<HashTableDemo> {
   }
 
   List<Widget> _getChainsWidget() {
-    List<SearchChain> body = [];
+    List<Widget> body = [];
     for (var i = 0; i < _chains.length; i++) {
       body.add(SearchChain(name: '$i', model: _chains[i]));
+    }
+    if (_usingPrimeDistribution) {
+      body.add(Container(
+        margin: EdgeInsets.symmetric(vertical: 3.0, horizontal: 5.0),
+        child: Text('Using prime number: $_currentPrime'), 
+        ));
     }
     return body;
   }
@@ -183,10 +190,10 @@ class _HashTableDemoState extends State<HashTableDemo> {
         ),
         Switch(
           activeColor: Colors.red,
-          value: _usingPrimes,
+          value: _usingPrimeDistribution,
           onChanged: (bool value) {
             setState(() {
-              _usingPrimes = value;
+              _usingPrimeDistribution = value;
             });
             _rebuild();
           },
@@ -216,9 +223,8 @@ class SearchChain extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
         alignment: Alignment.centerLeft,
-        child: ListenableBuilder(
-            listenable: model,
-            builder: (BuildContext context, Widget? child) {
+        child: Builder(
+            builder: (BuildContext context) {
               var contents = <Widget>[];
 
               contents.add(Container(
