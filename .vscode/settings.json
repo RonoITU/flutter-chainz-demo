@@ -2,5 +2,6 @@
     "java.compile.nullAnalysis.mode": "automatic",
     "[dart]": {
         "editor.formatOnSave": true
-    }
+    },
+    "cmake.sourceDirectory": "C:/Users/ronas/flutter/flutter_chainz_demo/windows"
 }

@@ -1,6 +1,8 @@
-# sep_chain_demo
+# Flutter Chainz Demo
 
-A new Flutter project.
+My first ever Flutter project. Code a demo of symbol tables using hashing with separate chaining.
+
+The initial code quality is somewhat poor given that this is a first attempt. Any feedback related to structuring Dart or widgets is much appreciated. Please use the issue system on GitHub.
 
 ## Getting Started
 

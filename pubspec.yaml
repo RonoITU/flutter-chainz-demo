@@ -1,4 +1,4 @@
-name: sep_chain_demo
+name: flutter_chainz_demo
 description: "A simple demo of hashing for separate chaining."
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
