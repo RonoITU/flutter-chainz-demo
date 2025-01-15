@@ -17,4 +17,4 @@ samples, guidance on mobile development, and a full API reference.
 
 ## License
 
-This trivial version of the project is released for use under the MIT license. 
+This project is released under the MIT license. 
